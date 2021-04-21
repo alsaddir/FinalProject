@@ -31,7 +31,7 @@ void PauseMenuPopupState::Render()
 	SDL_SetRenderDrawColor(GameEngine::Instance()->GetRenderer(),64,64,128,128);
 
 	//draw background
-	SDL_Rect rect = { 256,128,450,450 };
+	SDL_Rect rect = { 180,128,450,450 };
 	SDL_RenderFillRect(GameEngine::Instance()->GetRenderer(),&rect);
 
 	//draw the buttons
@@ -61,8 +61,8 @@ void PauseMenuPopupState::Render()
 void PauseMenuPopupState::Enter()
 {
 	cout << "Entring Pause"<<endl;
-	m_vButtons.push_back(new Button("Assets/Img/resume.png", {0,0,200,80}, {412,200,200,80}));
-	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 412,400,200,80 }));
+	m_vButtons.push_back(new Button("Assets/Img/resume.png", {0,0,200,80}, {300,200,200,80}));
+	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, {300,400,200,80 }));
 }
 
 void PauseMenuPopupState::Exit()

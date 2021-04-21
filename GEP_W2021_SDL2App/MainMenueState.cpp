@@ -7,8 +7,8 @@ void MainMenueState::Enter()
 	cout << "Entering MainMenu...\n";
 	GameEngine::Instance()->SetLeftMouse(false);
 
-	m_vButtons.push_back(new Button("Assets/Img/play.png", { 0,0,400,100 }, { 312,200,400,100 }));
-	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 312,400,400,100 }));
+	m_vButtons.push_back(new Button("Assets/Img/play.png", { 0,0,400,100 }, { 200,200,400,100 }));
+	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 200,400,400,100 }));
 }
 
 void MainMenueState::Update()

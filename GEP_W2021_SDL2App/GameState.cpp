@@ -227,9 +227,9 @@ void GameState::CheckCollision()
 				player->GetBullets().erase(player->GetBullets().begin() + b);
 
 				//destroy the asteroid
-				if ((asteroids[i]->GetWidth() - 20 ) > 0) 
+				if ((asteroids[i]->GetWidth() - 40 ) > 0) 
 				{
-					asteroids[i]->SetHightAndWidth(20);
+					asteroids[i]->SetHightAndWidth(5);
 				}
 				else {
 					delete asteroids[i];

@@ -40,7 +40,7 @@ void GameOverState::Render()
 	
 	string s = "The Final Score is " +to_string(GameEngine::Instance()->final_scoree);
 	m_pFont = TTF_OpenFont("Assets/Fonts/LTYPE.TTF", 30);//30 is the
-	RenderFont(s.c_str(),350,50 ,false);
+	RenderFont(s.c_str(),200,200 ,false);
 	SDL_RenderCopy(GameEngine::Instance()->GetRenderer(), m_pFontTexture, 0, &m_rFontRect);
 
 
@@ -52,7 +52,7 @@ void GameOverState::Render()
 void GameOverState ::Enter()
 {
 	cout << "Entring Pause" << endl;
-	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 412,400,200,80 }));
+	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 312,400,200,80 }));
 }
 
 void GameOverState::Exit()
