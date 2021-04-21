@@ -34,6 +34,8 @@ private:
 	float lives = 50;
 	int score = 0;
 	int score_added = 5;
+	int screenWidth;
+	int screenHeight;
 	
 	
 
@@ -49,6 +51,33 @@ public:
 		return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) < (r1 + r2));
 
 	}
+	std::string BorderCollisionTest(double playerXCord , double playerYCord)
+	{
+		string overflowScenario = "none";
+		if (playerXCord > screenWidth)
+		{
+			return "right";
+		}
+		else if (playerXCord < 0)
+		{
+			return "left";
+		}
+		else if (playerYCord < 0)
+		{
+			return "top";
+		}
+		else if (playerYCord > screenHeight)
+		{
+			return "bottom";
+		}
+		else
+		{
+			return "none";
+		}
+	}
+	void setScreenWidth(int screenWidth) { this->screenWidth = screenWidth; };
+	void setScreenHeight(int screenHeight) { this->screenHeight = screenHeight; };
+
 
 	void CheckCollision();
 	int GetScore() { return score; }
