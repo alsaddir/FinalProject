@@ -20,6 +20,8 @@ using namespace std;
 
 class GameEngine
 {
+	friend class GameOverState;
+	friend class GameState;
 private:
 	bool isRunning = true;
 	SDL_Window* window;
@@ -30,7 +32,7 @@ private:
 	//Statemachine
 	StateMachine* m_pFSM;
 
-
+	int final_scoree = 0;
 
 	//Player* player;
 

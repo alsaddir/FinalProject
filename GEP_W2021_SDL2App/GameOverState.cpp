@@ -27,7 +27,7 @@ void GameOverState::Render()
 	SDL_SetRenderDrawColor(GameEngine::Instance()->GetRenderer(), 64, 64, 128, 128);
 
 	//draw background
-	SDL_Rect rect = { 256,128,450,450 };
+	SDL_Rect rect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT};
 	SDL_RenderFillRect(GameEngine::Instance()->GetRenderer(), &rect);
 
 	//draw the buttons
@@ -36,10 +36,11 @@ void GameOverState::Render()
 		m_vButtons[i]->Render();
 
 	}
-	GameState g;
-	string s = "The Final Score is " +to_string(g.GetScore());
+	
+	
+	string s = "The Final Score is " +to_string(GameEngine::Instance()->final_scoree);
 	m_pFont = TTF_OpenFont("Assets/Fonts/LTYPE.TTF", 30);//30 is the
-	RenderFont(s.c_str(),350,50 ,false);
+	RenderFont(s.c_str(),200,200 ,false);
 	SDL_RenderCopy(GameEngine::Instance()->GetRenderer(), m_pFontTexture, 0, &m_rFontRect);
 
 
@@ -51,11 +52,12 @@ void GameOverState::Render()
 void GameOverState ::Enter()
 {
 	cout << "Entring Pause" << endl;
-	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 412,400,200,80 }));
+	m_vButtons.push_back(new Button("Assets/Img/exit.png", { 0,0,400,100 }, { 312,400,200,80 }));
 }
 
 void GameOverState::Exit()
 {
+	GameEngine::Instance()->final_scoree = 0;
 	cout << "Exiting Pause ... " << endl;
 	for (int i = 0; i < (int)m_vButtons.size(); i++)
 	{

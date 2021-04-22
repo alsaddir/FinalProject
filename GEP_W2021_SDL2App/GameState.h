@@ -13,7 +13,7 @@ using namespace std;
 
 class GameState : public ScreenState
 {
-	//friend class PauseMenuPopupState ;
+	friend class GameOverState ;
 private:
 	SDL_Texture* mainSpriteTex;//load and store the main sprite texture
 	SDL_Texture*lifeSpriteTex;//load and store the main sprite texture

@@ -7,6 +7,7 @@
 
 void GameState::Render()
 {
+
 	SDL_RenderClear(GameEngine::Instance()->GetRenderer()); //clear previously drawn frame
 
 	bg->Render();
@@ -276,15 +277,16 @@ void GameState::CheckCollision()
 				cout << "Bullet collided with an asteroid!!\n";
 				//may be, add to score here... 
 				score += score_added;
+				GameEngine::Instance()->final_scoree = score;
 				//cleanup/destroy the bullet
 				delete bullet;
 				player->GetBullets()[b] = nullptr;
 				player->GetBullets().erase(player->GetBullets().begin() + b);
 
 				//destroy the asteroid
-				if ((asteroids[i]->GetWidth() - 20 ) > 0) 
+				if ((asteroids[i]->GetWidth() - 40 ) > 0) 
 				{
-					asteroids[i]->SetHightAndWidth(20);
+					asteroids[i]->SetHightAndWidth(5);
 				}
 				else {
 					delete asteroids[i];
