@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "GameEngine.h"
-#include <algorithm> // for min max function
+#include <algorithm>	// for min max function
 
 void Player::UpdateBullets()
 {
@@ -153,4 +153,12 @@ void Player::SetPosition(int newXCoord, int newYCoord)
 {
 	this->m_DX = newXCoord;
 	this->m_DY = newYCoord;
+}
+
+
+void Player::setInvincibleWearOffTimeIntimeInSeconds(int timeInSeconds)
+{
+	int currentTimeInSeconds = time(0);
+
+	this->invincibleWearOffTimeInSeconds = currentTimeInSeconds + timeInSeconds;
 }

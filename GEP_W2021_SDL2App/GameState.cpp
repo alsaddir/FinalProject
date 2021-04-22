@@ -226,6 +226,7 @@ void GameState::CheckCollision()
 			Mix_PlayChannel(-1, heartSound, 0);
 			// affects player
 			player->setInvincible( true );
+			player->setInvincibleWearOffTimeIntimeInSeconds( 3 );
 			delete shield;
 			shield = nullptr;
 		}
@@ -322,6 +323,17 @@ void GameState::Update()
 	{
 		GameEngine::Instance()->GetFSM()->PushState(new GameOverState());
 		return; //to make sure we don't run the game in background while pause menu shows
+	}
+
+	if (player->isInvincible())
+	{
+		int currentTimeInSeconds = time(0);
+
+		if (currentTimeInSeconds > player->getInvincibleWearOffTimeInSeconds())
+		{
+			player->setInvincible(false);
+			cout << "inv has worn off" << endl;
+		}
 	}
 
 	if (player) player->Update();

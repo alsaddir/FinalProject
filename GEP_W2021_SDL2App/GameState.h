@@ -8,6 +8,7 @@
 #include "ScreenState.h"
 
 #include <iostream>
+#include <ctime>		// for invicibility count
 using namespace std;
 
 class GameState : public ScreenState
