@@ -113,8 +113,8 @@ void GameState::Enter()
 
 	/* *************** Shield ***************** */
 
-	SDL_Rect shieldSrcRect = { 0,0, 521 , 512 };	
-	SDL_Rect shieldDesRect = { 0,0, 32 , 32 };	// 64x64 is the width/high of asteroid
+	SDL_Rect shieldSrcRect = { 0,0, 521 , 512 };	// dimesions of the png
+	SDL_Rect shieldDesRect = { 0,0, 32 , 32 };		// size of the sprite on screen
 
 	//generated random speed 
 	float r = (1 - rand() % 2 * 2) * (rand() % 6 + 1);
@@ -135,8 +135,6 @@ void GameState::Enter()
 	doubleScores= new LifePickUp(doubleScoreSpriteTex, dScoreSrcRect, dScoreDesRect, rotate);
 
 
-
-
 	player = new Player(mainSpriteTex, bgDestRect.w * 0.5, bgDestRect.h - 100);
 
 }
@@ -154,8 +152,12 @@ void GameState::CheckCollision()
 
 			//there was a player-asteroid collision!!!
 			cout << "Player collided with an asteroid and got killed!!\n";
-			//we can delete the player...
-			lives -= 1;
+
+			// if the player is not invincible, take damage
+			if (!player->isInvincible())
+			{
+				lives -= 1;
+			}
 			
 			if (lives == 0)
 			{
@@ -205,6 +207,27 @@ void GameState::CheckCollision()
 			score_added *= 2;
 			delete doubleScores;
 			doubleScores = nullptr;
+		}
+
+	}
+
+
+	//Pick up the shield which  double the score
+	if (shield) {
+		if (CircleCollisionTest(player->GetX(), player->GetY(),
+			shield->GetX(), shield->GetY(),
+			player->GetRadius(), shield->GetRadius()
+		))
+		{
+
+			//there was a player-shield pickup
+			cout << "Player collected a shield\n";
+			//we can delete the player...
+			Mix_PlayChannel(-1, heartSound, 0);
+			// affects player
+			player->setInvincible( true );
+			delete shield;
+			shield = nullptr;
 		}
 
 	}

@@ -132,6 +132,11 @@ void Player::UpdatePlayer()
 
 }
 
+void Player::Invincible(int durationInMilli)
+{
+
+}
+
 
 
 //void Player::UpdatePos()
