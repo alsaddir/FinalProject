@@ -12,6 +12,7 @@ void GameState::Render()
 
 	bg->Render();
 	if (player) player->Render();
+	if (enemy) enemy->Render();
 	if (doubleScores) doubleScores->Render();
 	if (shield) shield->Render();
 	for (int i = 0; i < asteroids.size(); i++)
@@ -34,6 +35,7 @@ void GameState::Enter()
 	//
 	bgSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/background.png");
 	mainSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/Sprites.png");
+	enemySpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/enemySprites.png");
 	doubleScoreSpriteTex= GameEngine::Instance()->LoadTexture("Assets/Sprites/Heart.png");
 	lifeSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/life.png");
 	shieldSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/jewl.png");
@@ -135,8 +137,8 @@ void GameState::Enter()
 	dScoreDesRect.y = (rand() % 500) + 1; // generate between 1 and 600 pixel
 	doubleScores= new LifePickUp(doubleScoreSpriteTex, dScoreSrcRect, dScoreDesRect, rotate);
 
-
 	player = new Player(mainSpriteTex, bgDestRect.w * 0.5, bgDestRect.h - 100);
+	enemy = new Player(enemySpriteTex, (bgDestRect.w * 0.5) + 50, 100 , true);
 
 }
 
@@ -213,7 +215,7 @@ void GameState::CheckCollision()
 	}
 
 
-	//Pick up the shield which  double the score
+	//Pick up the shield which gives temporary invsiibility 
 	if (shield) {
 		if (CircleCollisionTest(player->GetX(), player->GetY(),
 			shield->GetX(), shield->GetY(),
@@ -234,6 +236,58 @@ void GameState::CheckCollision()
 
 	}
 
+
+	if (player && enemy)
+	{
+	// check for player's bullets hitting enemy
+		for (int b = 0; b < (int)player->GetBullets().size(); b++)
+		{
+			Bullet* bullet = player->GetBullets()[b];
+
+			if (CircleCollisionTest(bullet->GetX(), bullet->GetY(),
+				enemy->GetX(), enemy->GetY(),
+				bullet->GetRadius(), enemy->GetRadius()
+			))
+			{
+
+				cout << "Plaey hit enemy\n";
+				//may be, add to score here... 
+				score += score_added;
+				delete bullet;
+				player->GetBullets()[b] = nullptr;
+				player->GetBullets().erase(player->GetBullets().begin() + b);
+
+				//destroy the enemy
+				delete enemy;
+				enemy = nullptr;
+				break;
+			}
+		}
+	}
+
+	if (player && enemy)
+	{
+		// check for enemy's bullets hitting player
+		for (int b = 0; b < (int)enemy->GetBullets().size(); b++)
+		{
+
+			Bullet* bullet = enemy->GetBullets()[b];
+
+			if (CircleCollisionTest(bullet->GetX(), bullet->GetY(),
+				player->GetX(), player->GetY(),
+				bullet->GetRadius(), player->GetRadius()
+			))
+			{
+
+				cout << "enemy hit player\n";
+				//may be, add to score here... 
+				lives -= 1;
+				delete bullet;
+				enemy->GetBullets().erase(enemy->GetBullets().begin() + b);
+				break;
+			}
+		}
+	}
 
 /*	std::string overFlowScenario = BorderCollisionTest(player->GetX, player->GetY);
 	if (!overFlowScenario.compare("none"))
@@ -339,6 +393,7 @@ void GameState::Update()
 	}
 
 	if (player) player->Update();
+	if (enemy) enemy->npcAi(player);
 
 	for (int i = 0; i < asteroids.size(); i++)
 		asteroids[i]->Update();

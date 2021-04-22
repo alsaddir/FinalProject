@@ -20,10 +20,12 @@ private:
 	SDL_Texture* bgSpriteTex; //load and store background sprite tex
 	SDL_Texture* doubleScoreSpriteTex; //load and store background sprite tex
 	SDL_Texture* shieldSpriteTex;
+	SDL_Texture* enemySpriteTex;
 	
 	SpriteEx* bg;
 
 	Player* player;
+	Player* enemy;
 	bool cIsPressed = false;
 	vector<Asteroid*> asteroids;
 	vector<LifePickUp*> lifes;

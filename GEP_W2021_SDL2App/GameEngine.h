@@ -32,7 +32,7 @@ private:
 	//Statemachine
 	StateMachine* m_pFSM;
 
-	int final_scoree = 0;
+	//int final_scoree = 0;
 
 	//Player* player;
 
@@ -68,6 +68,7 @@ public:
 	//All subsequent calls to the Instance() simply returns our first created GameEngine instance
 	SDL_Texture* LoadTexture(const char* path);
 	static GameEngine* Instance();
+	int final_scoree = 0;
 
 	bool IsRunning() { return isRunning; }
 	void QuitGame() { isRunning = false; }
