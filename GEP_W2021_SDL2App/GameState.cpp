@@ -5,8 +5,6 @@
 #include "GameOverState.h"
 
 
-
-
 void GameState::Render()
 {
 	SDL_RenderClear(GameEngine::Instance()->GetRenderer()); //clear previously drawn frame
@@ -14,6 +12,7 @@ void GameState::Render()
 	bg->Render();
 	if (player) player->Render();
 	if (doubleScores) doubleScores->Render();
+	if (shield) shield->Render();
 	for (int i = 0; i < asteroids.size(); i++)
 	{
 		asteroids[i]->Render();
@@ -23,6 +22,7 @@ void GameState::Render()
 	{
 		lifes[i]->Render();
 	}
+
 	string s = "Score : " + to_string(score) + "&& Lives :"+to_string(lives);
 	RenderFont(s.c_str(), 32, 50, true);
 	ScreenState::Render();
@@ -35,7 +35,7 @@ void GameState::Enter()
 	mainSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/Sprites.png");
 	doubleScoreSpriteTex= GameEngine::Instance()->LoadTexture("Assets/Sprites/Heart.png");
 	lifeSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/life.png");
-	//lifeSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/Sprites.png");
+	shieldSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/jewl.png");
 
 
 	SDL_Rect bgSrcRect = { 0,0,0,0 };
@@ -108,9 +108,23 @@ void GameState::Enter()
 
 		LifePickUp* life = new LifePickUp(lifeSpriteTex, lifesSrcRect, lifesDesRect, r);
 		lifes.push_back(life);//push it into the vector
-
-
 	}
+
+
+	/* *************** Shield ***************** */
+
+	SDL_Rect shieldSrcRect = { 0,0, 521 , 512 };	
+	SDL_Rect shieldDesRect = { 0,0, 32 , 32 };	// 64x64 is the width/high of asteroid
+
+	//generated random speed 
+	float r = (1 - rand() % 2 * 2) * (rand() % 6 + 1);
+
+	shieldDesRect.x = (rand() % 700) + 1; // genetare between 1 & 700 pixels
+	shieldDesRect.y = (rand() % 500) + 1; // generate between 1 and 600 pixel
+	shieldDesRect.h = 64;
+	shieldDesRect.w = 64;
+
+	shield = new ShieldPickUp(shieldSpriteTex, shieldSrcRect, shieldDesRect, r);
 
 
 	SDL_Rect dScoreSrcRect = { 0,0,32,32};// 64x64 is the width/high of asteroid
@@ -196,7 +210,26 @@ void GameState::CheckCollision()
 	}
 
 
+/*	std::string overFlowScenario = BorderCollisionTest(player->GetX, player->GetY);
+	if (!overFlowScenario.compare("none"))
+	{
+		if (overFlowScenario.compare("right"))
+		{
+			player->SetPosition
+		}
+		else if (overFlowScenario.compare("left"))
+		{
 
+		}
+		else if (overFlowScenario.compare("top"))
+		{
+
+		}
+		else if (overFlowScenario.compare("bottom"))
+		{
+
+		}
+	} */
 
 
 

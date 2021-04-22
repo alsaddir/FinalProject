@@ -144,3 +144,8 @@ void Player::UpdatePlayer()
 //	spriteSrcRect.x = spriteSrcRect.w * m_iSprte; //updates the animation
 //}
 
+void Player::SetPosition(int newXCoord, int newYCoord)
+{
+	this->m_DX = newXCoord;
+	this->m_DY = newYCoord;
+}

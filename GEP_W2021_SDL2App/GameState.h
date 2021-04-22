@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Asteroid.h"
 #include "LifePickUp.h"
+#include "ShieldPickUp.h"
 #include "SDL_mixer.h"
 #include "PauseMenuPopupState.h"
 #include "ScreenState.h"
@@ -17,6 +18,7 @@ private:
 	SDL_Texture*lifeSpriteTex;//load and store the main sprite texture
 	SDL_Texture* bgSpriteTex; //load and store background sprite tex
 	SDL_Texture* doubleScoreSpriteTex; //load and store background sprite tex
+	SDL_Texture* shieldSpriteTex;
 	
 	SpriteEx* bg;
 
@@ -24,6 +26,7 @@ private:
 	bool cIsPressed = false;
 	vector<Asteroid*> asteroids;
 	vector<LifePickUp*> lifes;
+	ShieldPickUp* shield;
 	LifePickUp* doubleScores;
 
 

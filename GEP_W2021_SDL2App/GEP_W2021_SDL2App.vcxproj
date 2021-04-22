@@ -148,6 +148,7 @@
     <ClCompile Include="PauseMenuPopupState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenState.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="SpriteEx.cpp" />
     <ClCompile Include="StateMachine.cpp" />
   </ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="PauseMenuPopupState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenState.h" />
+    <ClInclude Include="ShieldPickUp.h" />
     <ClInclude Include="SpriteEx.h" />
     <ClInclude Include="StateMachine.h" />
   </ItemGroup>

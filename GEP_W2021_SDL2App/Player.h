@@ -23,7 +23,7 @@ public:
 	void Update();
 	void SetIdle();
 	void SpawnBullet();
-	
+	void SetPosition(int newXCoord, int newYCoord);
 
 
 	vector<Bullet*>& GetBullets() { return m_vBullets; }
