@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "GameEngine.h"
-#include <algorithm> // for min max function
+#include <algorithm>	// for min max function
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 void Player::UpdateBullets()
 {
@@ -26,7 +28,24 @@ void Player::UpdateBullets()
 }
 
 
+void Player::npcAi( Player * target )
+{
+	srand(time(NULL));
+	int randomInt = rand() % 10 + 1;
 
+	if (this->GetX() > target->GetX())
+		m_X -= 1;
+	else if (this->GetX() < target->GetX())
+		m_X += 1;
+		
+	this->UpdatePlayer();
+	this->UpdateBullets();
+
+	if ((randomInt % 5) == 0)
+	{
+		this->SpawnBullet();
+	}
+}
 
 
 Player::Player(SDL_Texture* tex, double x, double y)
@@ -35,6 +54,21 @@ Player::Player(SDL_Texture* tex, double x, double y)
 	spriteSrcRect = { 0,0,100,100 };
 	spriteDestRect = { (int)(m_X - 50),(int)(m_Y - 50),100,100 };
 	m_dRadius = 50;
+}
+
+Player::Player(SDL_Texture* tex, double x, double y , bool npc)
+	:SpriteExAnimated(tex, x - 50, y - 50, 0, 1, 4, 0.1f)
+{
+	spriteSrcRect = { 0,0,100,100 };
+	spriteDestRect = { (int)(m_X - 50),(int)(m_Y - 50),100,100 };
+	m_dRadius = 50;
+	this->npc = npc;
+
+	if (npc)
+	{
+		// rotate 180 degrees so enemy is looking at player
+		angle = -180;
+	}
 }
 
 Player::~Player()
@@ -113,7 +147,10 @@ void Player::UpdatePlayer()
 		spriteSrcRect.y = 100;//set y to the 100 so that we start playing the 2nd row
 		this->Animate();
 
-		this->MoveForward();
+		if (!this->npc)
+		{
+			this->MoveForward();
+		}
 
 	}
 	else
@@ -132,6 +169,11 @@ void Player::UpdatePlayer()
 
 }
 
+void Player::Invincible(int durationInMilli)
+{
+
+}
+
 
 
 //void Player::UpdatePos()
@@ -144,3 +186,16 @@ void Player::UpdatePlayer()
 //	spriteSrcRect.x = spriteSrcRect.w * m_iSprte; //updates the animation
 //}
 
+void Player::SetPosition(int newXCoord, int newYCoord)
+{
+	this->m_DX = newXCoord;
+	this->m_DY = newYCoord;
+}
+
+
+void Player::setInvincibleWearOffTimeIntimeInSeconds(int timeInSeconds)
+{
+	int currentTimeInSeconds = time(0);
+
+	this->invincibleWearOffTimeInSeconds = currentTimeInSeconds + timeInSeconds;
+}

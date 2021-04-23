@@ -21,6 +21,10 @@ void MainMenueState::Update()
 	if (m_vButtons[btn::play]->Clicked())
 	{
 		//we need to switch to gamestate ... 
+		GameState gameState;
+		gameState.setScreenHeight( WINDOW_HEIGHT );
+		gameState.setScreenWidth(WINDOW_WIDTH);
+
 		GameEngine::Instance()->GetFSM()->ChangeState(new GameState());
 	}
 

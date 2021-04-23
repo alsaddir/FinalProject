@@ -5,8 +5,6 @@
 #include "GameOverState.h"
 
 
-
-
 void GameState::Render()
 {
 
@@ -14,7 +12,9 @@ void GameState::Render()
 
 	bg->Render();
 	if (player) player->Render();
+	if (enemy) enemy->Render();
 	if (doubleScores) doubleScores->Render();
+	if (shield) shield->Render();
 	for (int i = 0; i < asteroids.size(); i++)
 	{
 		asteroids[i]->Render();
@@ -24,6 +24,7 @@ void GameState::Render()
 	{
 		lifes[i]->Render();
 	}
+
 	string s = "Score : " + to_string(score) + "&& Lives :"+to_string(lives);
 	RenderFont(s.c_str(), 32, 50, true);
 	ScreenState::Render();
@@ -34,9 +35,10 @@ void GameState::Enter()
 	//
 	bgSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/background.png");
 	mainSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/Sprites.png");
+	enemySpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/enemySprites.png");
 	doubleScoreSpriteTex= GameEngine::Instance()->LoadTexture("Assets/Sprites/Heart.png");
 	lifeSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/life.png");
-	//lifeSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/Sprites.png");
+	shieldSpriteTex = GameEngine::Instance()->LoadTexture("Assets/Sprites/jewl.png");
 
 
 	SDL_Rect bgSrcRect = { 0,0,0,0 };
@@ -109,9 +111,23 @@ void GameState::Enter()
 
 		LifePickUp* life = new LifePickUp(lifeSpriteTex, lifesSrcRect, lifesDesRect, r);
 		lifes.push_back(life);//push it into the vector
-
-
 	}
+
+
+	/* *************** Shield ***************** */
+
+	SDL_Rect shieldSrcRect = { 0,0, 521 , 512 };	// dimesions of the png
+	SDL_Rect shieldDesRect = { 0,0, 32 , 32 };		// size of the sprite on screen
+
+	//generated random speed 
+	float r = (1 - rand() % 2 * 2) * (rand() % 6 + 1);
+
+	shieldDesRect.x = (rand() % 700) + 1; // genetare between 1 & 700 pixels
+	shieldDesRect.y = (rand() % 500) + 1; // generate between 1 and 600 pixel
+	shieldDesRect.h = 64;
+	shieldDesRect.w = 64;
+
+	shield = new ShieldPickUp(shieldSpriteTex, shieldSrcRect, shieldDesRect, r);
 
 
 	SDL_Rect dScoreSrcRect = { 0,0,32,32};// 64x64 is the width/high of asteroid
@@ -121,10 +137,8 @@ void GameState::Enter()
 	dScoreDesRect.y = (rand() % 500) + 1; // generate between 1 and 600 pixel
 	doubleScores= new LifePickUp(doubleScoreSpriteTex, dScoreSrcRect, dScoreDesRect, rotate);
 
-
-
-
 	player = new Player(mainSpriteTex, bgDestRect.w * 0.5, bgDestRect.h - 100);
+	enemy = new Player(enemySpriteTex, (bgDestRect.w * 0.5) + 50, 100 , true);
 
 }
 
@@ -141,8 +155,12 @@ void GameState::CheckCollision()
 
 			//there was a player-asteroid collision!!!
 			cout << "Player collided with an asteroid and got killed!!\n";
-			//we can delete the player...
-			lives -= 1;
+
+			// if the player is not invincible, take damage
+			if (!player->isInvincible())
+			{
+				lives -= 1;
+			}
 			
 			if (lives == 0)
 			{
@@ -197,7 +215,100 @@ void GameState::CheckCollision()
 	}
 
 
+	//Pick up the shield which gives temporary invsiibility 
+	if (shield) {
+		if (CircleCollisionTest(player->GetX(), player->GetY(),
+			shield->GetX(), shield->GetY(),
+			player->GetRadius(), shield->GetRadius()
+		))
+		{
 
+			//there was a player-shield pickup
+			cout << "Player collected a shield\n";
+			//we can delete the player...
+			Mix_PlayChannel(-1, heartSound, 0);
+			// affects player
+			player->setInvincible( true );
+			player->setInvincibleWearOffTimeIntimeInSeconds( 3 );
+			delete shield;
+			shield = nullptr;
+		}
+
+	}
+
+
+	if (player && enemy)
+	{
+	// check for player's bullets hitting enemy
+		for (int b = 0; b < (int)player->GetBullets().size(); b++)
+		{
+			Bullet* bullet = player->GetBullets()[b];
+
+			if (CircleCollisionTest(bullet->GetX(), bullet->GetY(),
+				enemy->GetX(), enemy->GetY(),
+				bullet->GetRadius(), enemy->GetRadius()
+			))
+			{
+
+				cout << "Plaey hit enemy\n";
+				//may be, add to score here... 
+				score += score_added;
+				delete bullet;
+				player->GetBullets()[b] = nullptr;
+				player->GetBullets().erase(player->GetBullets().begin() + b);
+
+				//destroy the enemy
+				delete enemy;
+				enemy = nullptr;
+				break;
+			}
+		}
+	}
+
+	if (player && enemy)
+	{
+		// check for enemy's bullets hitting player
+		for (int b = 0; b < (int)enemy->GetBullets().size(); b++)
+		{
+
+			Bullet* bullet = enemy->GetBullets()[b];
+
+			if (CircleCollisionTest(bullet->GetX(), bullet->GetY(),
+				player->GetX(), player->GetY(),
+				bullet->GetRadius(), player->GetRadius()
+			))
+			{
+
+				cout << "enemy hit player\n";
+				//may be, add to score here... 
+				lives -= 1;
+				delete bullet;
+				enemy->GetBullets().erase(enemy->GetBullets().begin() + b);
+				break;
+			}
+		}
+	}
+
+/*	std::string overFlowScenario = BorderCollisionTest(player->GetX, player->GetY);
+	if (!overFlowScenario.compare("none"))
+	{
+		if (overFlowScenario.compare("right"))
+		{
+			player->SetPosition
+		}
+		else if (overFlowScenario.compare("left"))
+		{
+
+		}
+		else if (overFlowScenario.compare("top"))
+		{
+
+		}
+		else if (overFlowScenario.compare("bottom"))
+		{
+
+		}
+	} */
 
 
 
@@ -270,7 +381,19 @@ void GameState::Update()
 		return; //to make sure we don't run the game in background while pause menu shows
 	}
 
+	if (player->isInvincible())
+	{
+		int currentTimeInSeconds = time(0);
+
+		if (currentTimeInSeconds > player->getInvincibleWearOffTimeInSeconds())
+		{
+			player->setInvincible(false);
+			cout << "inv has worn off" << endl;
+		}
+	}
+
 	if (player) player->Update();
+	if (enemy) enemy->npcAi(player);
 
 	for (int i = 0; i < asteroids.size(); i++)
 		asteroids[i]->Update();
